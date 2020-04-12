@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Sample Category"
+            id="com.wxp.Favorites">
+      </category>
+      <view
+            id="com.wxp.favorites.views.FavoritesView"
+            name="Favorites"
+            icon="icons/sample.png"
+            class="com.wxp.favorites.views.FavoritesView"
+            category="com.wxp.Favorites"
+            inject="true">
+      </view>
+   </extension>
+
+</plugin>
