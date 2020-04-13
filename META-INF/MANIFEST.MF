@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Favorites
 Bundle-SymbolicName: com.wxp.Favorites;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: com.wxp.favorites.Activator
+Bundle-Activator: com.wxp.favorites.FavoritesActivator
 Bundle-Vendor: WXP
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
