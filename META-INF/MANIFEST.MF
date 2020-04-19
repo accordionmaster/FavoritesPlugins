@@ -15,5 +15,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: com.wxp.Favorites
 Import-Package: javax.inject
 Bundle-ActivationPolicy: lazy
-Export-Package: com.wxp.favorites.handlers,
+Export-Package: com.wxp.favorites.actions,
  com.wxp.favorites.views

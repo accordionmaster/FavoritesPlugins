@@ -175,6 +175,21 @@
             id="com.wxp.favorites.workbenchActionSet"
             label="Favorites ActionSet"
             visible="true">
+         <menu
+               id="com.wxp.favorites.workbenchMenu"
+               label="Fa&amp;voritesA"
+               path="additions">
+         </menu>
+         <action
+               class="com.wxp.favorites.actions.OpenFavoritesViewActionDelegate"
+               icon="icons/sample.png"
+               id="com.wxp.favorites.openFavoritesView"
+               label="Open Favo&amp;rites View A"
+               menubarPath="com.wxp.favorites.workbenchMenu/content"
+               style="push"
+               toolbarPath="Normal/additions"
+               tooltip="Open the favorites view in the current workbench page">
+         </action>
       </actionSet>
    </extension>
    <extension
@@ -206,6 +221,134 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="Ctrl+Shift+A">
       </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="com.wxp.favorites.popupMenu"
+            objectClass="org.eclipse.core.resources.IResource">
+         <action
+               class="com.wxp.favorites.actions.AddToFavoritesActionDelegate"
+               enablesFor="+"
+               icon="icons/sample.png"
+               id="com.wxp.favorites.addToFavorites"
+               label="Add"
+               menubarPath="com.wxp.favorites.popupSubMenu/content"
+               tooltip="Add the selected resource(s) to the Favorites view">
+         </action>
+         <menu
+               id="com.wxp.favorites.popupSubMenu"
+               label="Favorites"
+               path="additions">
+            <groupMarker
+                  name="content">
+            </groupMarker>
+            <separator
+                  name="additions">
+            </separator>
+         </menu>
+      </objectContribution>
+      <viewerContribution
+            id="com.wxp.favorites.membersViewPopup"
+            targetID="org.eclipse.jdt.ui.MembersView">
+         <menu
+               id="com.wxp.favorites.membersViewPopupSubMenu"
+               label="Favorites"
+               path="additions">
+            <groupMarker
+                  name="content">
+            </groupMarker>
+            <separator
+                  name="additions">
+            </separator>
+         </menu>
+         <action
+               class="com.wxp.favorites.actions.AddToFavoritesActionDelegate"
+               id="com.wxp.favorites.addToFavoritesInMembersView"
+               label="Add"
+               menubarPath="com.wxp.favorites.membersViewPopupSubMenu/content"
+               tooltip="Add selected member&apos;s compilation unit to the Favorites view">
+         </action>
+      </viewerContribution>
+      <viewerContribution
+            id="com.wxp.favorites.compilationUnitEditorPopup"
+            targetID="#CompilationUnitEditorContext">
+         <menu
+               id="com.wxp.favorites.compilationUnitEditorPopupSubMenu"
+               label="Favorites"
+               path="additions">
+            <groupMarker
+                  name="content">
+            </groupMarker>
+            <separator
+                  name="additions">
+            </separator>
+         </menu>
+         <action
+               class="com.wxp.favorites.actions.AddToFavoritesActionDelegate"
+               id="com.wxp.favorites.addToFavoritesInCompilationUnitEditor"
+               label="Add"
+               menubarPath="com.wxp.favorites.compilationUnitEditorPopupSubMenu/content">
+         </action>
+      </viewerContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.viewActions">
+      <viewContribution
+            id="com.wxp.favorites.membersViewActions"
+            targetID="org.eclipse.jdt.ui.MembersView">
+         <action
+               class="com.wxp.favorites.actions.AddToFavoritesActionDelegate"
+               icon="icons/sample.png"
+               id="com.wxp.favorites.addToFavoritesInMembersView"
+               label="Add"
+               menubarPath="com.wxp.favorites.membersViewPulldownSubMenu/content"
+               style="push"
+               toolbarPath="additions"
+               tooltip="Add the selected items in the Members view to the Favorites view">
+         </action>
+         <menu
+               id="com.wxp.favorites.membersViewPulldownSubMenu"
+               label="Favorites"
+               path="additions">
+            <groupMarker
+                  name="content">
+            </groupMarker>
+            <separator
+                  name="additions">
+            </separator>
+         </menu>
+      </viewContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            id="com.wxp.favorites.compilationUnitEditorActions"
+            targetID="org.eclipse.jdt.ui.CompilationUnitEditor">
+         <menu
+               id="com.wxp.favorites.compilationUnitEditorPopupSubMenu"
+               label="Favorites"
+               path="additions">
+            <groupMarker
+                  name="content">
+            </groupMarker>
+            <separator
+                  name="additions">
+            </separator>
+         </menu>
+         <action
+               class="com.wxp.favorites.actions.AddToFavoritesActionDelegate"
+               definitionId="com.wxp.favorites.commands.add"
+               icon="icons/sample.png"
+               id="com.wxp.favorites.addToFavoritesInCompilationUnitEditor"
+               label="Add"
+               menubarPath="com.wxp.favorites.compilationUnitEditorPopupSubMenu/content"
+               style="push"
+               toolbarPath="Normal/additions"
+               tooltip="Add the editor selection to the Favorites view">
+         </action>
+      </editorContribution>
    </extension>
 
 </plugin>
