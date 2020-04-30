@@ -36,6 +36,30 @@
             id="com.wxp.favorites.commands.add"
             name="Add">
       </command>
+      <command
+            categoryId="com.wxp.favorites.commands.category"
+            description="Copy selected items in the Favorites view"
+            id="com.wxp.favorites.commands.copy"
+            name="Copy">
+      </command>
+      <command
+            categoryId="com.wxp.favorites.commands.category"
+            description="Cut selected items from the Favorites view"
+            id="com.wxp.favorites.commands.cut"
+            name="Cut">
+      </command>
+      <command
+            categoryId="com.wxp.favorites.commands.category"
+            description="Paste clipboard contents into the Favorites view"
+            id="com.wxp.favorites.commands.paste"
+            name="Paste">
+      </command>
+      <command
+            categoryId="com.wxp.favorites.commands.category"
+            description="Rename the selected entry in the Favorites view"
+            id="com.wxp.favorites.commands.rename"
+            name="Rename">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -168,6 +192,28 @@
             </visibleWhen>
          </command>
       </menuContribution>
+      <menuContribution
+            locationURI="popup:com.wxp.favorites.views.FavoritesView?before=edit">
+         <command
+               commandId="com.wxp.favorites.commands.cut"
+               icon="icons/cut_edit.gif"
+               tooltip="Cut the currently selected items from the Favorites view">
+         </command>
+         <command
+               commandId="com.wxp.favorites.commands.paste"
+               icon="icons/paste_edit.gif"
+               tooltip="Paste clipboard contents into the Favorites view">
+         </command>
+         <command
+               commandId="com.wxp.favorites.commands.copy"
+               icon="icons/copy_edit.gif"
+               tooltip="Copy the currently selected items in the Favorites view">
+         </command>
+         <command
+               commandId="com.wxp.favorites.commands.rename"
+               tooltip="Rename the currently selected Favorites item">
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.actionSets">
@@ -211,6 +257,66 @@
       <handler
             class="com.wxp.favorites.handlers.AddToFavoritesHandler"
             commandId="com.wxp.favorites.commands.add">
+      </handler>
+      <handler
+            class="com.wxp.favorites.handlers.CopyFavoritesHandler"
+            commandId="org.eclipse.ui.edit.copy">
+         <activeWhen>
+            <with
+                  variable="activePartId">
+               <equals
+                     value="com.wxp.favorites.views.FavoritesView">
+               </equals>
+            </with>
+         </activeWhen>
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <count
+                     value="+">
+               </count>
+            </with>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="com.wxp.favorites.handlers.CopyFavoritesHandler"
+            commandId="com.wxp.favorites.commands.copy">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <count
+                     value="+">
+               </count>
+            </with>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="com.wxp.favorites.handlers.CutFavoritesHandler"
+            commandId="com.wxp.favorites.commands.cut">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <count
+                     value="+">
+               </count>
+            </with>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="com.wxp.favorites.handlers.PasteFavoritesHandler"
+            commandId="com.wxp.favorites.commands.paste">
+      </handler>
+      <handler
+            class="com.wxp.favorites.handlers.RenameFavoritesHandler"
+            commandId="com.wxp.favorites.commands.rename">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <count
+                     value="+">
+               </count>
+            </with>
+         </enabledWhen>
       </handler>
    </extension>
    <extension

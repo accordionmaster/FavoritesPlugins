@@ -14,6 +14,8 @@ import org.osgi.framework.Version;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
+import com.wxp.favorites.model.FavoritesManager;
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -42,6 +44,7 @@ public class FavoritesActivator extends AbstractUIPlugin {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		FavoritesManager.getManager().saveFavorites();
 		saveConfigPrefs();
 		plugin = null;
 		super.stop(context);

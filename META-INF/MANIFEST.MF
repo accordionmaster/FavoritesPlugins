@@ -10,10 +10,15 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.core;bundle-version="3.21.0",
  org.eclipse.core.expressions,
  org.eclipse.core.resources;bundle-version="3.13.700",
- org.eclipse.jface.text;bundle-version="3.16.200"
+ org.eclipse.jface.text;bundle-version="3.16.200",
+ org.eclipse.ui.ide;bundle-version="3.17.0",
+ org.eclipse.jdt.ui;bundle-version="3.21.0",
+ org.eclipse.ui.workbench.texteditor;bundle-version="3.14.100"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: com.wxp.Favorites
 Import-Package: javax.inject
 Bundle-ActivationPolicy: lazy
 Export-Package: com.wxp.favorites.actions,
+ com.wxp.favorites.handlers,
+ com.wxp.favorites.model,
  com.wxp.favorites.views
