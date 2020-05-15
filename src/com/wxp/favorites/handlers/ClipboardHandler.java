@@ -19,6 +19,6 @@ public abstract class ClipboardHandler extends AbstractHandler{
 		}
 	}
 
-	protected abstract Object execute(ExecutionEvent event, Clipboard clipboard);
+	protected abstract Object execute(ExecutionEvent event, Clipboard clipboard) throws ExecutionException;
 
 }

@@ -60,6 +60,12 @@
             id="com.wxp.favorites.commands.rename"
             name="Rename">
       </command>
+      <command
+            categoryId="com.wxp.favorites.commands.category"
+            description="Delete the selected entries in the Properties Editor"
+            id="com.wxp.properties.editor.delete"
+            name="Delete">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -214,39 +220,96 @@
                tooltip="Rename the currently selected Favorites item">
          </command>
       </menuContribution>
-   </extension>
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            id="com.wxp.favorites.workbenchActionSet"
-            label="Favorites ActionSet"
-            visible="true">
+      <menuContribution
+            locationURI="popup:com.wxp.properties.editor?after=edit">
+         <command
+               commandId="com.wxp.properties.editor.delete"
+               icon="icons/delete_edit.gif"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <count
+                        value="+">
+                  </count>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="com.wxp.favorites.commands.cut"
+               icon="icons/cut_edit.gif"
+               tooltip="Cut the currently selected items from the Favorites view">
+	        </command>
+	        <command
+	               commandId="com.wxp.favorites.commands.paste"
+	               icon="icons/paste_edit.gif"
+	               tooltip="Paste clipboard contents into the Favorites view">
+	        </command>
+	        <command
+	               commandId="com.wxp.favorites.commands.copy"
+	               icon="icons/copy_edit.gif"
+	               tooltip="Copy the currently selected items in the Favorites view">
+	        </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
          <menu
-               id="com.wxp.favorites.workbenchMenu"
-               label="Fa&amp;voritesA"
-               path="additions">
+               id="com.wxp.favorites.menus.PropertiesEditor"
+               label="Properties Editor">
+            <command
+                  commandId="com.wxp.properties.editor.delete"
+                  icon="icons/delete_edit.gif">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="activeEditorId">
+                     <equals
+                           value="com.wxp.properties.editor">
+                     </equals>
+                  </with>
+               </visibleWhen>
+            </command>
          </menu>
-         <action
-               class="com.wxp.favorites.actions.OpenFavoritesViewActionDelegate"
-               icon="icons/sample.png"
-               id="com.wxp.favorites.openFavoritesView"
-               label="Open Favo&amp;rites View A"
-               menubarPath="com.wxp.favorites.workbenchMenu/content"
-               style="push"
-               toolbarPath="Normal/additions"
-               tooltip="Open the favorites view in the current workbench page">
-         </action>
-      </actionSet>
-   </extension>
-   <extension
-         point="org.eclipse.core.expressions.propertyTesters">
-      <propertyTester
-            class="com.wxp.favorites.propertyTester.FavoritesTester"
-            id="com.wxp.favorites.propertiesTester"
-            namespace="com.wxp.favorites"
-            properties="isFavorite, notFavorite"
-            type="java.lang.Object">
-      </propertyTester>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="com.wxp.properties.editor.toolbar">
+            <command
+                  commandId="com.wxp.properties.editor.delete"
+                  icon="icons/delete_edit.gif"
+                  style="push">
+            </command>
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeEditorId">
+                  <equals
+                        value="com.wxp.properties.editor">
+                  </equals>
+               </with>
+            </visibleWhen>
+         </toolbar>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:com.wxp.favorites.views.FavoritesView?before=edit">
+            <command
+               commandId="com.wxp.favorites.commands.cut"
+               icon="icons/cut_edit.gif"
+               tooltip="Cut the currently selected items from the Favorites view">
+	        </command>
+	        <command
+	               commandId="com.wxp.favorites.commands.paste"
+	               icon="icons/paste_edit.gif"
+	               tooltip="Paste clipboard contents into the Favorites view">
+	        </command>
+	        <command
+	               commandId="com.wxp.favorites.commands.copy"
+	               icon="icons/copy_edit.gif"
+	               tooltip="Copy the currently selected items in the Favorites view">
+	        </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -292,6 +355,26 @@
       </handler>
       <handler
             class="com.wxp.favorites.handlers.CutFavoritesHandler"
+            commandId="org.eclipse.ui.edit.cut">
+        <activeWhen>
+            <with
+                  variable="activePartId">
+               <equals
+                     value="com.wxp.favorites.views.FavoritesView">
+               </equals>
+            </with>
+         </activeWhen>
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <count
+                     value="+">
+               </count>
+            </with>
+         </enabledWhen>
+      </handler>
+       <handler
+            class="com.wxp.favorites.handlers.CutFavoritesHandler"
             commandId="com.wxp.favorites.commands.cut">
          <enabledWhen>
             <with
@@ -301,6 +384,18 @@
                </count>
             </with>
          </enabledWhen>
+      </handler>
+      <handler
+            class="com.wxp.favorites.handlers.PasteFavoritesHandler"
+            commandId="com.wxp.favorites.commands.paste">
+              <activeWhen>
+            <with
+                  variable="activePartId">
+               <equals
+                     value="com.wxp.favorites.views.FavoritesView">
+               </equals>
+            </with>
+         </activeWhen>
       </handler>
       <handler
             class="com.wxp.favorites.handlers.PasteFavoritesHandler"
@@ -318,6 +413,71 @@
             </with>
          </enabledWhen>
       </handler>
+      <handler
+            class="com.wxp.favorites.handlers.DeletePropertiesHandler"
+            commandId="org.eclipse.ui.edit.delete">
+         <activeWhen>
+            <with
+                  variable="activeEditorId">
+               <equals
+                     value="com.wxp.properties.editor">
+               </equals>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.wxp.favorites.handlers.DeletePropertiesHandler"
+            commandId="com.wxp.properties.editor.delete">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <count
+                     value="+">
+               </count>
+            </with>
+         </enabledWhen>
+      </handler>
+   </extension>
+    <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="com.wxp.favorites.workbenchActionSet"
+            label="Favorites ActionSet"
+            visible="true">
+         <menu
+               id="com.wxp.favorites.workbenchMenu"
+               label="Fa&amp;voritesA"
+               path="additions">
+         </menu>
+         <action
+               class="com.wxp.favorites.actions.OpenFavoritesViewActionDelegate"
+               icon="icons/sample.png"
+               id="com.wxp.favorites.openFavoritesView"
+               label="Open Favo&amp;rites View A"
+               menubarPath="com.wxp.favorites.workbenchMenu/content"
+               style="push"
+               toolbarPath="Normal/additions"
+               tooltip="Open the favorites view in the current workbench page">
+         </action>
+      </actionSet>
+   </extension>
+      <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="com.wxp.favorites.propertyTester.FavoritesTester"
+            id="com.wxp.favorites.propertiesTester"
+            namespace="com.wxp.favorites"
+            properties="isFavorite, notFavorite"
+            type="java.lang.Object">
+      </propertyTester>
+   </extension>
+      <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="com.wxp.properties.editor.context"
+            name="Properties Editor Context"
+            parentId="org.eclipse.ui.textEditorScope">
+      </context>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -327,6 +487,24 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="Ctrl+Shift+A">
       </key>
+      <key
+            commandId="com.wxp.properties.editor.delete"
+            contextId="com.wxp.properties.editor.context"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="F9">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.wxp.favorites.editors.PropertiesEditor"
+            contributorClass="com.wxp.favorites.editors.PropertiesEditorContributor"
+            default="false"
+            extensions="properties"
+            icon="icons/sample.png"
+            id="com.wxp.properties.editor"
+            name="Properties Editor">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">
@@ -456,5 +634,7 @@
          </action>
       </editorContribution>
    </extension>
+   
+
 
 </plugin>

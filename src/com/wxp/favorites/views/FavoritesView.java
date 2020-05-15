@@ -77,23 +77,23 @@ public class FavoritesView extends ViewPart {
 	public static final String ID = "com.wxp.favorites.views.FavoritesView";
 
 	private TableViewer viewer;
-	
+
 	private TableColumn typeColumn;
-	
+
 	private TableColumn nameColumn;
-	
+
 	private TableColumn locationColumn;
-	
+
 	private FavoritesViewSorter sorter;
-	
+
 	private IHandler removeHandler;
-	
+
 	private RemoveFavoritesContributionItem removeContributionItem;
-	
+
 	private FavoritesViewFilterAction filterAction;
-	
+
 	private ISelectionListener pageSelectionListener;
-	
+
 	private IMemento memento;
 
 	@Override
@@ -111,41 +111,41 @@ public class FavoritesView extends ViewPart {
 		hookPageSelection();
 		hookMouse();
 	}
-	
+
 	private void createTableViewer(Composite parent) {
-		
+
 		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		final Table table = viewer.getTable();
-		
+
 		/**
 		 * Eclipse 为自动调成大小的表提供了TableColumnLayout
 		 */
 		TableColumnLayout layout = new TableColumnLayout();
 		parent.setLayout(layout);
-		
+
 		typeColumn = new TableColumn(table, SWT.LEFT);
 		typeColumn.setText("");
 		layout.setColumnData(typeColumn, new ColumnPixelData(18));
-		
+
 		nameColumn = new TableColumn(table, SWT.LEFT);
 		nameColumn.setText("Name");
 		layout.setColumnData(nameColumn, new ColumnWeightData(4));
-		
+
 		locationColumn = new TableColumn(table, SWT.LEFT);
 		locationColumn.setText("Location");
 		layout.setColumnData(locationColumn, new ColumnWeightData(9));
-		
+
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-		
+
 		viewer.setContentProvider(new FavoritesViewContentProvider());
 		viewer.setLabelProvider(new FavoritesViewLabelProvider());
 		viewer.setInput(FavoritesManager.getManager());
-		
+
 		getSite().setSelectionProvider(viewer);
 //		getViewSite().setSelectionProvider(viewer);
 	}
-	
+
 	private void createTableSorter() {
 		Comparator<IFavoriteItem> nameComparator = new Comparator<IFavoriteItem>() {
 			@Override
@@ -165,32 +165,29 @@ public class FavoritesView extends ViewPart {
 				return i1.getType().compareTo(i2.getType());
 			}
 		};
-		
-		sorter = new FavoritesViewSorter(viewer, 
-				new TableColumn[] {nameColumn ,locationColumn, typeColumn }, 
-				new Comparator[] {nameComparator, locationComparator, typeComparator}
-		);
+
+		sorter = new FavoritesViewSorter(viewer, new TableColumn[] { nameColumn, locationColumn, typeColumn },
+				new Comparator[] { nameComparator, locationComparator, typeComparator });
 		if (memento != null) {
 			sorter.init(memento);
 		}
 		viewer.setSorter(sorter);
 	}
-	
+
 	private void createContributions() {
 		removeHandler = new RemoveFavoritesHandler();
-		removeContributionItem = 
-				new RemoveFavoritesContributionItem(getViewSite(), removeHandler);
+		removeContributionItem = new RemoveFavoritesContributionItem(getViewSite(), removeHandler);
 	}
-	
+
 	private void createContextMenu() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
-			
+
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				FavoritesView.this.fillContextMenu(manager);
-				
+
 			}
 		});
 		Menu menu = menuMgr.createContextMenu(viewer.getControl());
@@ -203,25 +200,23 @@ public class FavoritesView extends ViewPart {
 		menuMgr.add(removeContributionItem);
 		menuMgr.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
-	
+
 	private void createToolbarButtons() {
 		IToolBarManager toolBarMgr = getViewSite().getActionBars().getToolBarManager();
 		toolBarMgr.add(new GroupMarker("edit"));
 		toolBarMgr.add(removeContributionItem);
 	}
-	
+
 	private void createViewPulldownMenu() {
-		IMenuManager menu = 
-				getViewSite().getActionBars().getMenuManager();
-		filterAction = 
-				new FavoritesViewFilterAction(viewer, "Filter...");
-		
+		IMenuManager menu = getViewSite().getActionBars().getMenuManager();
+		filterAction = new FavoritesViewFilterAction(viewer, "Filter...");
+
 		if (memento != null) {
 			filterAction.init(memento);
 		}
 		menu.add(filterAction);
 	}
-	
+
 	private void hookKeyboard() {
 		viewer.getControl().addKeyListener(new KeyAdapter() {
 			@Override
@@ -239,14 +234,13 @@ public class FavoritesView extends ViewPart {
 			removeContributionItem.run();
 		}
 	}
-	
+
 	private void hookGlobalHandlers() {
-		IHandlerService handlerService = 
-				(IHandlerService)getViewSite().getService(IHandlerService.class);
+		IHandlerService handlerService = (IHandlerService) getViewSite().getService(IHandlerService.class);
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			private IHandlerActivation removeActivation;
-			
+
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				if (event.getSelection().isEmpty()) {
@@ -254,23 +248,23 @@ public class FavoritesView extends ViewPart {
 						handlerService.deactivateHandler(removeActivation);
 						removeActivation = null;
 					}
-					
-				}else {
+
+				} else {
 					if (removeActivation == null) {
-						removeActivation = 
-								handlerService.activateHandler(IWorkbenchActionDefinitionIds.DELETE, removeHandler);
+						removeActivation = handlerService.activateHandler(IWorkbenchActionDefinitionIds.DELETE,
+								removeHandler);
 					}
 				}
-				
+
 			}
 		});
 	}
-	
+
 	private void hookDragAndDrop() {
 		new FavoritesDragSource(viewer);
 		new FavoritesDropTarget(viewer);
 	}
-	
+
 	/**
 	 * 当用户双击Favorites视图的文件时，应打开一个文件编辑器。
 	 */
@@ -282,15 +276,17 @@ public class FavoritesView extends ViewPart {
 			}
 		});
 	}
-	
+
 	private void hookPageSelection() {
 		pageSelectionListener = new ISelectionListener() {
-			
+
 			@Override
 			public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 				pageSelectionChanged(part, selection);
 			}
 		};
+		getSite().getPage().addPostSelectionListener(pageSelectionListener);
+
 	}
 
 	protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
@@ -305,35 +301,34 @@ public class FavoritesView extends ViewPart {
 		if (items.length > 0) {
 			viewer.setSelection(new StructuredSelection(items), true);
 		}
-		
+
 	}
-	
+
 	private void createInlineEditor() {
-		TableViewerColumn column = 
-				new TableViewerColumn(viewer, nameColumn);
-		
+		TableViewerColumn column = new TableViewerColumn(viewer, nameColumn);
+
 		column.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				return ((IFavoriteItem)element).getName();
+				return ((IFavoriteItem) element).getName();
 			}
 		});
-		
+
 		column.setEditingSupport(new EditingSupport(viewer) {
-			
+
 			TextCellEditor editor = null;
-			
+
 			@Override
 			protected void setValue(Object element, Object value) {
-				((IFavoriteItem)element).setName((String) value);
+				((IFavoriteItem) element).setName((String) value);
 				viewer.refresh(element);
 			}
-			
+
 			@Override
 			protected Object getValue(Object element) {
-				return ((IFavoriteItem)element).getName();
+				return ((IFavoriteItem) element).getName();
 			}
-			
+
 			@Override
 			protected CellEditor getCellEditor(Object element) {
 				if (editor == null) {
@@ -342,13 +337,13 @@ public class FavoritesView extends ViewPart {
 				}
 				return editor;
 			}
-			
+
 			@Override
 			protected boolean canEdit(Object element) {
 				return true;
 			}
 		});
-		
+
 		/**
 		 * 此时，用户可以在上下文菜单中选择Rename命令或在Favoites视图中点击名称以命名一个特定
 		 * 的收藏夹项。TableViewerColumn默认提供了“点击重命名”行为，而这种行为与我们想要的不是
@@ -356,44 +351,41 @@ public class FavoritesView extends ViewPart {
 		 * 如如从RenameFavoritesHandler，或当用户按下Alt并点击Favorites视图中的名称以触发。
 		 */
 		viewer.getColumnViewerEditor().addEditorActivationListener(new ColumnViewerEditorActivationListener() {
-			
-			
+
 			@Override
 			public void beforeEditorActivated(ColumnViewerEditorActivationEvent event) {
 				if (event.eventType == event.MOUSE_CLICK_SELECTION) {
 					if (!(event.sourceEvent instanceof MouseEvent)) {
 						event.cancel = true;
-					}else {
-						MouseEvent m  = (MouseEvent) event.sourceEvent;
+					} else {
+						MouseEvent m = (MouseEvent) event.sourceEvent;
 						if ((m.stateMask & SWT.ALT) == 0) {
 							event.cancel = true;
 						}
 					}
-				}else if (event.eventType != event.PROGRAMMATIC) {
+				} else if (event.eventType != event.PROGRAMMATIC) {
 					event.cancel = true;
 				}
-				
+
 			}
-			
+
 			@Override
 			public void beforeEditorDeactivated(ColumnViewerEditorDeactivationEvent event) {
-				
+
 			}
-			
+
 			@Override
 			public void afterEditorDeactivated(ColumnViewerEditorDeactivationEvent event) {
-				
+
 			}
-			
+
 			@Override
 			public void afterEditorActivated(ColumnViewerEditorActivationEvent event) {
-				
+
 			}
 		});
-		
-	}
-	
 
+	}
 
 	/**
 	 * The constructor
@@ -408,23 +400,24 @@ public class FavoritesView extends ViewPart {
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
-	
+
 	/**
 	 * For testing purpose only.
+	 * 
 	 * @return the table viewer in the Favorites view
 	 */
 	public TableViewer getFavoritesViewer() {
 		return viewer;
 	}
-	
+
 	public IStructuredSelection getSelection() {
 		return (IStructuredSelection) viewer.getSelection();
 	}
-	
+
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		viewer.addSelectionChangedListener(listener);
 	}
-	
+
 	@Override
 	public void dispose() {
 		if (pageSelectionListener != null) {
@@ -432,17 +425,16 @@ public class FavoritesView extends ViewPart {
 		}
 		super.dispose();
 	}
-	
+
 	public void saveState(IMemento memento) {
 		super.saveState(memento);
 		sorter.saveState(memento);
 		filterAction.saveState(memento);
 	}
-	
+
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		this.memento = memento;
 	}
 
-	
 }
