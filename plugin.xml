@@ -669,6 +669,37 @@
          </action>
       </editorContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="com.wxp.favorites.perspectives.FavoritesPerspectiveFactory"
+            icon="icons/sample.png"
+            id="com.wxp.favorites.FavoritesPerspective"
+            name="Favorites">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.ui.resourcePerspective">
+         <view
+               id="com.wxp.favorites.views.FavoritesView"
+               minimized="false"
+               relationship="stack"
+               relative="org.eclipse.ui.views.TaskList"
+               visible="true">
+         </view>
+         <viewShortcut
+               id="com.wxp.favorites.views.FavoritesView">
+         </viewShortcut>
+         <perspectiveShortcut
+               id="com.wxp.favorites.FavoritesPerspective">
+         </perspectiveShortcut>
+         <actionSet
+               id="com.wxp.favorites.workbenchActionSet">
+         </actionSet>
+      </perspectiveExtension>
+   </extension>
    
 
 
