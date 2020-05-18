@@ -283,7 +283,8 @@
             <command
                   commandId="com.wxp.properties.editor.delete"
                   icon="icons/delete_edit.gif">
-               <visibleWhen
+            </command>
+            <visibleWhen
                      checkEnabled="false">
                   <with
                         variable="activeEditorId">
@@ -291,8 +292,7 @@
                            value="com.wxp.properties.editor">
                      </equals>
                   </with>
-               </visibleWhen>
-            </command>
+            </visibleWhen>
          </menu>
       </menuContribution>
       <menuContribution

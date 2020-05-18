@@ -412,7 +412,7 @@ public class PropertiesEditor extends MultiPageEditorPart {
 			@Override
 			public void focusLost(FocusEvent e) {
 				if (currentContext == null) {
-					currentContext = service.activateContext("com.wxp.properties.editor.context ");
+					currentContext = service.activateContext("com.wxp.properties.editor.context");
 				}
 			}
 
