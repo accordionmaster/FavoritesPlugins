@@ -3,6 +3,7 @@ package com.wxp.favorites.views;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.widgets.Display;
 
 import com.wxp.favorites.model.FavoritesManager;
 import com.wxp.favorites.model.FavoritesManagerEvent;
@@ -37,6 +38,25 @@ public class FavoritesViewContentProvider implements IStructuredContentProvider,
 
 	@Override
 	public void favoritesChanged(FavoritesManagerEvent event) {
+		// If this is the UI thread, then make the change.
+		if (Display.getCurrent() != null) {
+			updateViewer(event);
+			return;
+		}
+		
+		// otherwise, redirect to execute on the UI thread.
+		Display.getDefault().asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				updateViewer(event);
+			}
+		});
+	}
+	
+	private void updateViewer(final FavoritesManagerEvent event) {
+		// Use the set Redraw method to reduce flicker
+		// when adding or removing multiple items in a table.
 		viewer.getTable().setRedraw(false);
 		try {
 			viewer.remove(event.getItemsRemoved());

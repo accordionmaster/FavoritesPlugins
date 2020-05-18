@@ -20,8 +20,8 @@
    <extension
          point="org.eclipse.ui.commands">
       <category
-            description="Favorites Commands"
-            id="com.wxp.favorites.commands"
+            description="Commands related to the Favorites View"
+            id="com.wxp.favorites.commands.category"
             name="Favorites">
       </category>
       <command
@@ -65,6 +65,19 @@
             description="Delete the selected entries in the Properties Editor"
             id="com.wxp.properties.editor.delete"
             name="Delete">
+      </command>
+      <command
+            categoryId="com.wxp.favorites.commands.category"
+            description="Delete the selected resources"
+            id="com.wxp.favorites.commands.delete"
+            name="Delete">
+      </command>
+      <command
+            categoryId="com.wxp.favorites.commands.category"
+            defaultHandler="com.wxp.favorites.handlers.SimulatedOperationHandler"
+            description="A do nothing operation that shows simulated progress in the Window&apos;s status bar"
+            id="com.wxp.favorites.commands.simulated"
+            name="Simulated Operation showing progress in Status Bar">
       </command>
    </extension>
    <extension
@@ -218,6 +231,16 @@
          <command
                commandId="com.wxp.favorites.commands.rename"
                tooltip="Rename the currently selected Favorites item">
+         </command>
+         <command
+               commandId="com.wxp.favorites.commands.delete"
+               icon="icons/delete_edit.gif"
+               style="push"
+               tooltip="Delete the currently selected resources">
+         </command>
+         <command
+               commandId="com.wxp.favorites.commands.simulated"
+               style="push">
          </command>
       </menuContribution>
       <menuContribution
@@ -428,6 +451,18 @@
       <handler
             class="com.wxp.favorites.handlers.DeletePropertiesHandler"
             commandId="com.wxp.properties.editor.delete">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <count
+                     value="+">
+               </count>
+            </with>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="com.wxp.favorites.handlers.DeleteResourcesHandler"
+            commandId="com.wxp.favorites.commands.delete">
          <enabledWhen>
             <with
                   variable="selection">

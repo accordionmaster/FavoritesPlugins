@@ -94,7 +94,7 @@ public class RemoveFavoritesContributionItem extends ContributionItem {
 			menuItem.setImage(image);
 			menuItem.setEnabled(enabled);
 		}
-		
+
 		if (toolItem != null) {
 			toolItem.setImage(image);
 			toolItem.setEnabled(enabled);
@@ -102,9 +102,13 @@ public class RemoveFavoritesContributionItem extends ContributionItem {
 	}
 
 	public void run() {
-		final IHandlerService handlerService = (IHandlerService) viewSite.getService(IHandlerService.class);
-		IEvaluationContext evaluationContext = handlerService.createContextSnapshot(true);
-		ExecutionEvent event = new ExecutionEvent(null, Collections.EMPTY_MAP, null, evaluationContext);
+		final IHandlerService handlerService = 
+				(IHandlerService) viewSite.getService(IHandlerService.class);
+		IEvaluationContext evaluationContext = 
+				handlerService.createContextSnapshot(true);
+		ExecutionEvent event = 
+				new ExecutionEvent(null, Collections.EMPTY_MAP, null, 
+						evaluationContext);
 		try {
 			handler.execute(event);
 		} catch (ExecutionException e) {
