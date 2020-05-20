@@ -700,6 +700,14 @@
          </actionSet>
       </perspectiveExtension>
    </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            class="com.wxp.favorites.wizards.ExtractStringsWizard"
+            id="com.wxp.favorites.extract"
+            name="Extract Strings">
+      </wizard>
+   </extension>
    
 
 

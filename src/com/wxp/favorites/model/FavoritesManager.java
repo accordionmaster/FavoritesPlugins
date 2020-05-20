@@ -109,7 +109,7 @@ public class FavoritesManager implements IResourceChangeListener{
 	}
 	
 	public IFavoriteItem newFavoriteFor(Object obj) {
-		FavoriteItemType[] types = FavoriteItemType.geTypes();
+		FavoriteItemType[] types = FavoriteItemType.getTypes();
 		for (int i = 0; i < types.length; i++) {
 			IFavoriteItem item = types[i].newFavorite(obj);
 			if (item != null) {
@@ -197,7 +197,7 @@ public class FavoritesManager implements IResourceChangeListener{
 	}
 
 	public IFavoriteItem newFavoriteFor(String typeId, String info) {
-		FavoriteItemType[] types = FavoriteItemType.geTypes();
+		FavoriteItemType[] types = FavoriteItemType.getTypes();
 		for (int i = 0; i < types.length; i++) {
 			if (types[i].getId().equals(typeId)) {
 				return types[i].loadFavorite(info);

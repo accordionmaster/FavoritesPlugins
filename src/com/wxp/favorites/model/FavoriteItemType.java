@@ -253,7 +253,7 @@ public abstract class FavoriteItemType implements Comparable<FavoriteItemType> {
 			JAVA_PROJECT, JAVA_PACKAGE_ROOT, JAVA_PACKAGE, JAVA_CLASS_FILE, JAVA_COMP_UNIT, JAVA_INTERFACE,
 			JAVA_CLASS };
 
-	public static FavoriteItemType[] geTypes() {
+	public static FavoriteItemType[] getTypes() {
 		return TYPES;
 	}
 
