@@ -708,6 +708,32 @@
             name="Extract Strings">
       </wizard>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="com.wxp.favorites.preferences.FavoritesPreferencePage"
+            id="com.wxp.favorites.prefs.view"
+            name="Favorites">
+      </page>
+      <page
+            category="com.wxp.favorites.prefs.view"
+            class="com.wxp.favorites.preferences.NestedPreferencePage"
+            id="com.wxp.favorites.prefs.nested"
+            name="Nested Prefs">
+      </page>
+      <page
+            category="com.wxp.favorites.prefs.nested"
+            class="com.wxp.favorites.preferences.NestedPreferencePage2"
+            id="com.wxp.favorites.prefs.nested2"
+            name="Nested Prefs 2">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.wxp.favorites.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
    
 
 

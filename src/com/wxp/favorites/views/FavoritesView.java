@@ -10,6 +10,9 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.TableColumnLayout;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
@@ -46,12 +49,14 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
+import com.wxp.favorites.FavoritesActivator;
 import com.wxp.favorites.actions.FavoritesViewFilterAction;
 import com.wxp.favorites.contributions.RemoveFavoritesContributionItem;
 import com.wxp.favorites.handlers.RemoveFavoritesHandler;
 import com.wxp.favorites.handlers.RenameFavoritesHandler;
 import com.wxp.favorites.model.FavoritesManager;
 import com.wxp.favorites.model.IFavoriteItem;
+import com.wxp.favorites.preferences.PreferenceConstants;
 import com.wxp.favorites.util.EditorUtil;
 
 /**
@@ -70,6 +75,9 @@ import com.wxp.favorites.util.EditorUtil;
  */
 
 public class FavoritesView extends ViewPart {
+	
+	private static final int NAME_COLUMN_INITIAL_WIDTH = 200;
+	private static final int LOCATION_COLUMN_INITIAL_WIDTH = 450;
 
 	/**
 	 * The ID of the view as specified by the extension.
@@ -95,10 +103,22 @@ public class FavoritesView extends ViewPart {
 	private ISelectionListener pageSelectionListener;
 
 	private IMemento memento;
+	
+	private final IPropertyChangeListener propertyChangeListener = 
+			new IPropertyChangeListener() {
+				@Override
+				public void propertyChange(PropertyChangeEvent event) {
+					if (event.getProperty().equals(
+							PreferenceConstants.FAVORITES_VIEW_NAME_COLUMN_VISIBLE) || event.getProperty().equals(PreferenceConstants.FAVORITES_VIEW_LOCATION_COLUMN_VISIBLE)) {
+						updateColumnWidths();
+					}
+				}
+			};
 
 	@Override
 	public void createPartControl(Composite parent) {
 		createTableViewer(parent);
+		updateColumnWidths();
 		createTableSorter();
 		createContributions();
 		createContextMenu();
@@ -110,6 +130,8 @@ public class FavoritesView extends ViewPart {
 		createInlineEditor();
 		hookPageSelection();
 		hookMouse();
+		FavoritesActivator.getDefault().getPreferenceStore()
+			.addPropertyChangeListener(propertyChangeListener);
 	}
 
 	private void createTableViewer(Composite parent) {
@@ -144,6 +166,16 @@ public class FavoritesView extends ViewPart {
 
 		getSite().setSelectionProvider(viewer);
 //		getViewSite().setSelectionProvider(viewer);
+	}
+	
+	private void updateColumnWidths() {
+		IPreferenceStore prefs = FavoritesActivator.getDefault().getPreferenceStore();
+		
+		boolean showNameColumn = prefs.getBoolean(PreferenceConstants.FAVORITES_VIEW_NAME_COLUMN_VISIBLE);
+		nameColumn.setWidth(showNameColumn ? NAME_COLUMN_INITIAL_WIDTH : 0);
+		
+		boolean showLocationColumn = prefs.getBoolean(PreferenceConstants.FAVORITES_VIEW_LOCATION_COLUMN_VISIBLE);
+		locationColumn.setWidth(showLocationColumn ? LOCATION_COLUMN_INITIAL_WIDTH : 0);
 	}
 
 	private void createTableSorter() {
@@ -422,6 +454,7 @@ public class FavoritesView extends ViewPart {
 	public void dispose() {
 		if (pageSelectionListener != null) {
 			getSite().getPage().removePostSelectionListener(pageSelectionListener);
+			FavoritesActivator.getDefault().getPreferenceStore().removePropertyChangeListener(propertyChangeListener);
 		}
 		super.dispose();
 	}
