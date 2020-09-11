@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.Status;
 public class FavoritesLog {
 
 	/**
+	 * test
 	 * Log the specified information.
 	 * 
 	 * @param message, a human-readable message, localized to the current locale.
